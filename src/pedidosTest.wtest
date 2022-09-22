@@ -1,0 +1,30 @@
+import pedidos.*
+import rodados.*
+
+describe "test de pedidos" {
+	
+	var cachito = new Corsa(color="rojo")
+	const pedido1 = new Pedido(distancia=960,pasajeros=4,tiempo=8,coloresIncomp=#{"azul","negro"})
+	const pedido2 = new Pedido(distancia=960,pasajeros=4,tiempo=8,coloresIncomp=#{"azul","negro","rojo"})
+	const pedido3 = new Pedido(distancia=960,pasajeros=5,tiempo=8,coloresIncomp=#{"azul","negro"})
+	const pedido4 = new Pedido(distancia=1560,pasajeros=4,tiempo=8,coloresIncomp=#{"azul","negro"})
+
+	
+	test "cachito puede satisfacer pedido1" {
+		assert.that(pedido1.puedeSatisfacerPedido(cachito))
+	}
+
+	test "cachito no puede satisfacer pedido2" {
+		assert.notThat(pedido2.puedeSatisfacerPedido(cachito))
+	}
+
+	test "cachito no puede satisfacer pedido3 por cant de pasajeros" {
+		assert.notThat(pedido3.puedeSatisfacerPedido(cachito))
+	}
+
+	test "cachito no puede satisfacer pedido4 por distancia/velocidad" {
+		assert.notThat(pedido4.puedeSatisfacerPedido(cachito))
+	}
+
+
+}

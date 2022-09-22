@@ -1,0 +1,67 @@
+import dependencias.*
+import rodados.*
+import pedidos.*
+
+describe "test con 2 dependencias " {
+	
+	const deportes = new Dependencia(cantEmpleados=45)
+	const cultura = new Dependencia(cantEmpleados=31)
+	var cachito = new Corsa(color="rojo")
+	var autoEspecial = new AutoEspecial(capacidad=5,velocidad=160,peso=1200,color="beige")
+	const pedido1 = new Pedido(distancia=960,pasajeros=4,tiempo=8,coloresIncomp=#{"azul","negro"})
+	const pedido2 = new Pedido(distancia=960,pasajeros=4,tiempo=8,coloresIncomp=#{"blanco","azul","verde"})
+	const pedido3 = new Pedido(distancia=960,pasajeros=15,tiempo=8,coloresIncomp=#{"azul","amarillo"})
+	const pedido4 = new Pedido(distancia=1560,pasajeros=4,tiempo=8,coloresIncomp=#{"azul","blanco"})
+
+	
+	method initialize() {
+		deportes.agregarAFlota(cachito)
+		deportes.agregarAFlota(new Corsa(color="azul"))
+		deportes.agregarAFlota(new Corsa(color="verde"))
+		deportes.agregarAFlota(new Kwid(tieneTanqueAdicional=true))
+		deportes.agregarAFlota(autoEspecial)
+		cultura.agregarAFlota(cachito)
+		cultura.agregarAFlota(new Kwid(tieneTanqueAdicional=true))
+		cultura.agregarAFlota(new Kwid(tieneTanqueAdicional=true))
+		cultura.agregarAFlota(new Kwid())
+		cultura.agregarAFlota(trafic)
+		deportes.agregarPedido(pedido1)
+		deportes.agregarPedido(pedido2)
+		deportes.agregarPedido(pedido3)
+		deportes.agregarPedido(pedido4)
+
+	}
+	
+	test "capacidad faltante de deportes" {
+		assert.equals(25,deportes.capacidadFaltante())
+	}
+	test "capacidad faltante de cultura" {
+		assert.equals(5,cultura.capacidadFaltante())
+	}
+	
+	test "deportes está bien equipada" {
+		assert.that(deportes.estaBienEquipada())
+	}
+	test "deportes no está bien equipada cuando agregamos a trafic" {
+		deportes.agregarAFlota(trafic)
+		assert.notThat(deportes.estaBienEquipada())
+	}
+	
+	test "deportes no está bien equipada cuando tiene menos de 3" {
+		deportes.flota().clear()
+		deportes.agregarAFlota(autoEspecial)
+		assert.notThat(deportes.estaBienEquipada())
+	}
+	
+	test "pedidosConColorIncompatibles test" {
+		assert.that(deportes.pedidosConColorIncompatibles("azul"))
+	}
+	
+	test "pedidosConColorIncompatibles test blanco no satisface" {
+		assert.notThat(deportes.pedidosConColorIncompatibles("blanco"))
+	}
+	
+	test "pedidos que no pueden ser satisfechos por la flota" {
+		assert.equals([pedido3,pedido4],deportes.pedidosQueNoPuedenSerSatisfechos())
+	}
+}
